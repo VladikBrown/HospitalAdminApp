@@ -1,0 +1,132 @@
+package model;
+
+import org.bson.codecs.pojo.annotations.BsonProperty;
+import org.bson.types.ObjectId;
+
+import java.util.Date;
+
+public class Patient {
+
+    private ObjectId id;
+    private String surname;
+    @BsonProperty(value = "first_name")
+    private String firstName;
+    @BsonProperty(value = "second_name")
+    private String secondName;
+    private Address address;
+    //private LocalDate birthdate;
+    private Date birthdate;
+    //private LocalDate dateOfVisit;
+    @BsonProperty(value = "date_of_visit")
+    private Date dateOfVisit;
+    @BsonProperty(value = "name_of_doctor")
+    private String docName;
+    private String conclusion;
+
+    public Patient(){
+        this.id = new ObjectId();
+        this.surname = "";
+        this.firstName = "";
+        this.secondName = "";
+        this.address = null;
+        this.birthdate = null;
+        this.dateOfVisit = null;
+        this.docName = "";
+        this.conclusion = "";
+    }
+
+    public Patient(String surname, String firstName, String secondName, Address address, Date birthdate,
+                   Date dateOfVisit ,String docName, String conclusion) {
+        this.surname = surname;
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.address = address;
+        this.birthdate = birthdate;
+        this.dateOfVisit = dateOfVisit;
+        this.docName = docName;
+        this.conclusion = conclusion;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public String getIdString(){
+        return id.toString();
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public String getDocName() {
+        return docName;
+    }
+
+    public void setDocName(String docName) {
+        this.docName = docName;
+    }
+
+    public String getConclusion() {
+        return conclusion;
+    }
+
+    public void setConclusion(String conclusion) {
+        this.conclusion = conclusion;
+    }
+
+    public Date getBirthdate() { return birthdate; }
+
+    public void setBirthdate(Date birthdate) { this.birthdate = birthdate; }
+
+    public Date getDateOfVisit() { return dateOfVisit; }
+
+    public void setDateOfVisit(Date dateOfVisit) { this.dateOfVisit = dateOfVisit; }
+
+    @Override
+    public String toString() {
+        return "Patient{" +
+                "id='" + id + '\'' +
+                ", surname='" + surname + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", secondName='" + secondName + '\'' +
+                ", address=" + address +
+                ", birthdate=" + birthdate +
+                ", dateOfVisit=" + dateOfVisit +
+                ", docName='" + docName + '\'' +
+                ", conclusion='" + conclusion + '\'' +
+                '}';
+    }
+}
