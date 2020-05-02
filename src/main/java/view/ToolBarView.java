@@ -2,46 +2,75 @@ package view;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
-import presenter.Presenter;
+import presenter.ToolBarViewPresenter;
 
-public class ToolBarView extends ToolBar implements IView {
-    Presenter presenter;
-    Button showAllButton;
+public class ToolBarView extends ToolBar implements IToolBarView {
+    ToolBarViewPresenter presenter;
+    Button updateButton;
     Button addRecordButton;
     Button findButton;
     Button deleteButton;
-    Button editTableButton;
+    Button findAndDelete;
 
     {
-        showAllButton = new Button("Update");
+        updateButton = new Button("Update");
         addRecordButton = new Button("Add");
         findButton = new Button("Find");
         deleteButton = new Button("Delete");
-
+        findAndDelete = new Button("Find And Delete");
     }
 
-    public ToolBarView(){
+    public ToolBarView() {
     }
 
-    public ToolBarView(Presenter presenter){
+    public ToolBarView(ToolBarViewPresenter presenter) {
         this.presenter = presenter;
         configureButtons(presenter);
     }
 
-    private void configureButtons(Presenter presenter){
-        this.getItems().addAll(showAllButton, addRecordButton, findButton, deleteButton);
-        showAllButton.setOnAction(actionEvent -> presenter.setOnUpdateButton());
-        deleteButton.setOnAction(actionEvent -> presenter.setOnDelete());
-        addRecordButton.setOnAction(actionEvent -> presenter.setOnAdd());
-
+    @Override
+    public void setToolBarViewPresenter(ToolBarViewPresenter toolBarViewPresenter) {
+        this.presenter = toolBarViewPresenter;
+        configureButtons(toolBarViewPresenter);
     }
 
-    public Presenter getPresenter() {
+    @Override
+    public ToolBarViewPresenter getToolbarViewPresenter() {
         return presenter;
     }
 
-    public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
-        configureButtons(presenter);
+    @Override
+    public void configureButtons(ToolBarViewPresenter presenter) {
+        this.getItems().addAll(updateButton, addRecordButton, findButton, deleteButton, findAndDelete);
+        onAddButton();
+        onDeleteButton();
+        onFindButton();
+        onFindAndDeleteButton();
+        onUpdateButton();
+    }
+
+    @Override
+    public void onUpdateButton() {
+        updateButton.setOnAction(actionEvent -> presenter.onUpdate());
+    }
+
+    @Override
+    public void onAddButton() {
+        addRecordButton.setOnAction(actionEvent -> presenter.onAdd());
+    }
+
+    @Override
+    public void onDeleteButton() {
+        deleteButton.setOnAction(actionEvent -> presenter.onDelete());
+    }
+
+    @Override
+    public void onFindButton() {
+        findButton.setOnAction(actionEvent -> presenter.onFind());
+    }
+
+    @Override
+    public void onFindAndDeleteButton() {
+        findAndDelete.setOnAction(actionEvent -> presenter.onFindAndDelete());
     }
 }

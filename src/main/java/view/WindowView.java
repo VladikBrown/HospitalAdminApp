@@ -2,8 +2,12 @@ package view;
 
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import presenter.Presenter;
 
@@ -24,7 +28,7 @@ public class WindowView {
     PatientInfoView infoPane;
     {
         view = new BorderPane();
-        leftAnchor  = new AnchorPane();
+        leftAnchor = new AnchorPane();
         rightAnchor = new AnchorPane();
         splitAnchor = new AnchorPane();
         centerPane = new SplitPane();
@@ -33,9 +37,9 @@ public class WindowView {
         infoPane = new PatientInfoView();
         tableView = new PatientTablePagerView();
         presenter = new Presenter(tableView, infoPane, topBar);
-        tableView.setPresenter(presenter);
-        topBar.setPresenter(presenter);
-        infoPane.setPresenter(presenter);
+        tableView.setTablePagerViewPresenter(presenter);
+        topBar.setToolBarViewPresenter(presenter);
+        infoPane.setInfoViewPresenter(presenter);
     }
 
 

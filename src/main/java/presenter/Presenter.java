@@ -1,50 +1,81 @@
 package presenter;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
-import model.Model;
+import model.IModel;
 import model.Patient;
-import view.PatientInfoView;
-import view.PatientTablePagerView;
-import view.PatientTableView;
-import view.ToolBarView;
-import view.dialogs.AddingDialogView;
+import model.PatientModel;
+import org.bson.Document;
+import view.*;
+import view.dialogs.AddPatientDialog;
+import view.dialogs.FindPatientDialog;
 
-public class Presenter implements IPresenter {
+import java.util.Optional;
+
+
+//подумать как с интерфейсами забацать
+public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPresenter<Patient>, ToolBarViewPresenter {
     private Patient selectedPatient;
-    private PatientTablePagerView patientTablePagerView;
-    private PatientInfoView patientInfoView;
-    private ToolBarView toolBarView;
-    private Model model;
-    private PatientTableView currentPage;
+    private TablePagerView<Patient> patientTablePagerView;
+    private InfoView<Patient> patientInfoView;
+    private IToolBarView toolBarView;
+    private ITableView currentPage;
+    private IModel<Patient> model;
 
-    public Presenter(PatientTablePagerView ptv, PatientInfoView piv, ToolBarView tbv){
-        patientTablePagerView = ptv;
+    public Presenter(PatientTablePagerView tpv, PatientInfoView piv, ToolBarView tbv) {
+        patientTablePagerView = tpv;
         patientInfoView = piv;
         toolBarView = tbv;
-        this.model = new Model(this);
+        this.model = new PatientModel(this);
     }
 
-    public void setOnFindButton(){
-        
-    }
-    
-    public void setOnUpdateButton() {
-        patientTablePagerView.createPager(model.getAllPatients());
+    public void onFind() {
+        var patientDialog = new FindPatientDialog();
+        patientDialog.show();
+        patientDialog.getResult().ifPresent(document -> model.find(document));
     }
 
-    public void setOnAdd(){
-        AddingDialogView addingDialogView = new AddingDialogView();
-        addingDialogView.showAndWait();
-        Patient patient = addingDialogView.getResult().get();
-        model.addPatient(patient);
+    @Override
+    public void onAmountOfCellsChanged() {
+        onUpdate();
     }
 
-    public void setOnDelete(){
-        if(selectedPatient != null){
-            model.deletePatient(selectedPatient);
-            currentPage.getItems().removeAll(selectedPatient);
+    @Override
+    public void showTable(ObservableList<Patient> patients) {
+        if (patients.size() > 0) {
+            patientTablePagerView.createPager(patients);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("No results on such criteria!");
+            alert.setContentText("Please, try to enter correct info");
+            alert.showAndWait();
+        }
+    }
+
+    @Override
+    public void setOnItemSelected(Patient selectedItem) {
+        showSelected(selectedItem);
+    }
+
+    @Override
+    public void onUpdate() {
+        patientTablePagerView.createPager(model.getAll());
+    }
+
+    @Override
+    public void onAdd() {
+        var patientDialog = new AddPatientDialog();
+        patientDialog.show();
+        patientDialog.getResult().ifPresent(patient -> model.add(patient));
+    }
+
+    @Override
+    public void onDelete() {
+        if (selectedPatient != null) {
+            model.delete(selectedPatient);
+            ((PatientTableView) currentPage).getItems().removeAll(selectedPatient);
             selectedPatient = null;
-        }else {
+        } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setHeaderText("You've not selected any patient!");
             alert.setContentText("Please, select patient and try again");
@@ -52,16 +83,60 @@ public class Presenter implements IPresenter {
         }
     }
 
-    public void setOnPatientSelected(Patient patient){
-        this.selectedPatient = patient;
-        patientInfoView.showPatientsInfo(patient);
+    @Override
+    public InfoView<Patient> getInfoView() {
+        return patientInfoView;
     }
 
-    public Patient getSelectedPatient() {
+    @Override
+    public void setInfoView(InfoView<Patient> infoView) {
+        this.patientInfoView = infoView;
+    }
+
+    @Override
+    public void showSelected(Patient patient) {
+        this.selectedPatient = patient;
+        patientInfoView.showInfo(patient);
+    }
+
+    public Patient getSelectedItem() {
         return selectedPatient;
     }
 
+    @Override
     public void setCurrentPage(PatientTableView patientTableView) {
         this.currentPage = patientTableView;
+    }
+
+    @Override
+    public void onFindAndDelete() {
+        var patientDialog = new FindPatientDialog();
+        patientDialog.show();
+        Optional<Document> documentOptional = patientDialog.getResult();
+        if (documentOptional.isPresent()) {
+            int amountOfPatients = model.deleteAll(documentOptional.get());
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Deleting");
+            alert.setContentText("You've deleted " + amountOfPatients + " patients");
+            alert.showAndWait();
+        }
+        onUpdate();
+    }
+
+    @Override
+    public IModel getModel() {
+        return this.model;
+    }
+
+    @Override
+    public void setModel(IModel model) {
+        this.model = model;
+    }
+
+    @Override
+    public void loadView() {
+        patientInfoView.setInfoViewPresenter(this);
+        patientTablePagerView.setTablePagerViewPresenter(this);
+        toolBarView.setToolBarViewPresenter(this);
     }
 }

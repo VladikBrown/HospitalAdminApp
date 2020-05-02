@@ -5,8 +5,8 @@ import javafx.stage.Window;
 
 import java.util.Optional;
 
-public interface EditingDialog<T> {
-    default void errorAlertation(String errorMessage, Window owner){
+public interface EditingDialog<Result> {
+    default void errorAlertation(String errorMessage, Window owner) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.initOwner(owner);
         alert.setTitle("Invalid Fields");
@@ -15,9 +15,7 @@ public interface EditingDialog<T> {
         alert.showAndWait();
     }
 
-    void handleOk();
-
     boolean isInputValid();
 
-    Optional<T> getResult();
+    Optional<Result> getResult();
 }

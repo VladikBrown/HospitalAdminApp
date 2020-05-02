@@ -1,34 +1,24 @@
 package view;
 
-import javafx.scene.control.Pagination;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Patient;
-import model.WorkWithMongo2;
-import presenter.Presenter;
+import presenter.TablePagerViewPresenter;
 
-public class PatientTableView extends TableView<Patient> implements IView {
-    Presenter presenter;
-    Pagination pagination;
+public class PatientTableView extends TableView<Patient> implements ITableView {
+    TablePagerViewPresenter presenter;
 
     TableColumn<Patient, String> surnameColumn;
     TableColumn<Patient, String> firstNameColumn;
     TableColumn<Patient, String> secondNameColumn;
 
-
-
-    public PatientTableView(){
-
+    public PatientTableView() {
         createColumns();
     }
 
-    public PatientTableView(Presenter presenter, Pagination pagination){
+    public PatientTableView(TablePagerViewPresenter presenter) {
         this.presenter = presenter;
-        this.pagination = pagination;
-
-        WorkWithMongo2 workWithMongo = new WorkWithMongo2();
-
         createColumns();
     }
 
@@ -42,25 +32,26 @@ public class PatientTableView extends TableView<Patient> implements IView {
         surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
         firstNameColumn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         secondNameColumn.setCellValueFactory(new PropertyValueFactory<>("secondName"));
-        this.getColumns().addAll(surnameColumn,firstNameColumn,secondNameColumn);
+        this.getColumns().addAll(surnameColumn, firstNameColumn, secondNameColumn);
     }
 
-    public Presenter getPresenter() {
-        return presenter;
-    }
-
-    public void setPresenter(Presenter presenter) {
-        this.presenter = presenter;
-        setOnItemSelected(presenter);
-    }
-
-    private void setOnItemSelected(Presenter presenter){
+    @Override
+    public void setOnItemSelected() {
         getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldValue, newValue)->{
-                    presenter.setOnPatientSelected(newValue);
-                    presenter.setCurrentPage(this);
+                (observable, oldValue, newValue) -> {
+                    this.presenter.setOnItemSelected(newValue);
+                    this.presenter.setCurrentPage(this);
                 });
     }
 
-    //TODO: добавление страничек с пациентами
+    @Override
+    public TablePagerViewPresenter getTablePagerViewPresenter() {
+        return this.presenter;
+    }
+
+    @Override
+    public void setTablePagerViewPresenter(TablePagerViewPresenter tableViewPresenter) {
+        this.presenter = tableViewPresenter;
+        setOnItemSelected();
+    }
 }

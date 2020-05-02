@@ -1,5 +1,18 @@
 package model;
 
-public interface IModel {
+import javafx.collections.ObservableList;
+import org.bson.Document;
+
+public interface IModel<T> {
     void upload();
+
+    void find(Document document);
+
+    ObservableList<T> getAll();
+
+    void add(T item);
+
+    void delete(T selectedPatient);
+
+    int deleteAll(Document document);
 }

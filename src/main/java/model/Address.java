@@ -60,11 +60,9 @@ public class Address {
 
     @Override
     public String toString() {
-        return "Address{" +
-                "street='" + street + '\'' +
-                ", homeNumber=" + homeNumber +
-                ", buildingNumber=" + buildingNumber +
-                ", apartmentsNumber=" + apartmentsNumber +
-                '}';
+        return "st. " + street +
+                ", home: " + homeNumber +
+                ", building: " + buildingNumber +
+                ", ap: " + apartmentsNumber;
     }
 }
