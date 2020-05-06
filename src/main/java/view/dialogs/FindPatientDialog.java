@@ -1,7 +1,7 @@
 package view.dialogs;
 
-import model.Address;
 import model.FieldsDB;
+import model.entity.Address;
 import org.bson.Document;
 
 import java.util.Optional;

@@ -3,15 +3,15 @@ package view;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import model.Patient;
+import model.entity.Patient;
 import presenter.TablePagerViewPresenter;
 
 public class PatientTableView extends TableView<Patient> implements ITableView {
-    TablePagerViewPresenter presenter;
+    private TablePagerViewPresenter<Patient> presenter;
 
-    TableColumn<Patient, String> surnameColumn;
-    TableColumn<Patient, String> firstNameColumn;
-    TableColumn<Patient, String> secondNameColumn;
+    private TableColumn<Patient, String> surnameColumn;
+    private TableColumn<Patient, String> firstNameColumn;
+    private TableColumn<Patient, String> secondNameColumn;
 
     public PatientTableView() {
         createColumns();

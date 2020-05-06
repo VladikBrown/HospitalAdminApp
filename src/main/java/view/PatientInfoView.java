@@ -5,16 +5,36 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import model.Patient;
+import model.entity.Patient;
 import presenter.InfoViewPresenter;
 
 public class PatientInfoView extends GridPane implements InfoView<Patient> {
-    InfoViewPresenter infoViewPresenter;
-    Label addressLabel = new Label("Address:"), addressInput = new Label("-----");
-    Label birthDateLabel = new Label("Date of Birth:"), birthDateInput = new Label("-----");
-    Label lastVisitLabel = new Label("Last visit:"), lastVisitInput = new Label("-----");
-    Label nameOfDoctorLabel = new Label("Doctor: "), nameOfDoctorInput = new Label("-----");
-    Label conclusionLabel = new Label("Conclusion:"), conclusionInput = new Label("-----");
+    private InfoViewPresenter infoViewPresenter;
+    private Label addressLabel = new Label("Address:"), addressInput = new Label("-----");
+    private Label birthDateLabel = new Label("Date of Birth:"), birthDateInput = new Label("-----");
+    private Label lastVisitLabel = new Label("Last visit:"), lastVisitInput = new Label("-----");
+    private Label nameOfDoctorLabel = new Label("Doctor: "), nameOfDoctorInput = new Label("-----");
+    private Label conclusionLabel = new Label("Conclusion:"), conclusionInput = new Label("-----");
+
+    public String getAddressInput() {
+        return addressInput.getText();
+    }
+
+    public String getBirthDateInput() {
+        return birthDateInput.getText();
+    }
+
+    public String getLastVisitInput() {
+        return lastVisitInput.getText();
+    }
+
+    public String getNameOfDoctorInput() {
+        return nameOfDoctorInput.getText();
+    }
+
+    public String getConclusionInput() {
+        return conclusionInput.getText();
+    }
 
     ColumnConstraints
             columnConstraints = new ColumnConstraints(0, 0, Double.MAX_VALUE),

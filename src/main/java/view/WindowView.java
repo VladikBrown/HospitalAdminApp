@@ -2,7 +2,6 @@ package view;
 
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
-import javafx.scene.control.Pagination;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -12,27 +11,26 @@ import javafx.stage.Stage;
 import presenter.Presenter;
 
 public class WindowView {
-    Presenter presenter;
+    private Presenter presenter;
     //components
-    BorderPane view;
-    AnchorPane splitAnchor;
-    SplitPane centerPane;
-    AnchorPane rightAnchor;
-    AnchorPane leftAnchor;
+    private BorderPane view;
+    private AnchorPane splitAnchor;
+    private SplitPane centerPane;
+    private AnchorPane rightAnchor;
+    private AnchorPane leftAnchor;
     //topBorder
-    ToolBarView topBar;
+    private ToolBarView topBar;
     //leftBorder - list of patients
-    Pagination pagination;
-    PatientTablePagerView tableView;
+    private PatientTablePagerView tableView;
     //rightBorder - info about patients
-    PatientInfoView infoPane;
+    private PatientInfoView infoPane;
+
     {
         view = new BorderPane();
         leftAnchor = new AnchorPane();
         rightAnchor = new AnchorPane();
         splitAnchor = new AnchorPane();
         centerPane = new SplitPane();
-        pagination = new Pagination();
         topBar = new ToolBarView();
         infoPane = new PatientInfoView();
         tableView = new PatientTablePagerView();

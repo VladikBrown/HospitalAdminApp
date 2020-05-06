@@ -1,7 +1,7 @@
 package view.dialogs;
 
-import model.Address;
-import model.Patient;
+import model.entity.Address;
+import model.entity.Patient;
 
 import java.util.Optional;
 

@@ -8,11 +8,11 @@ public interface IModel<T> {
 
     void find(Document document);
 
-    ObservableList<T> getAll();
-
     void add(T item);
 
     void delete(T selectedPatient);
 
     int deleteAll(Document document);
+
+    ObservableList<T> getAll();
 }

@@ -1,4 +1,4 @@
-package model;
+package mongoDAO;
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
@@ -7,31 +7,45 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import model.FieldsDB;
+import model.entity.Patient;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
 
+import java.io.FileInputStream;
 import java.util.function.Consumer;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import static com.mongodb.client.model.Filters.eq;
 import static org.bson.codecs.configuration.CodecRegistries.fromProviders;
 import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
-public class WorkWithMongo implements IWorkWithDB {
+public class WorkWithMongo {
+    static Logger LOGGER;
     private static final String DB_NAME = "hospitalDB";
     private static final String COLLECTION_NAME = "patients";
     private static final String GETTING_DATA_ERROR_MESSAGE = "Failed to get data from DB";
     private static final String DELETING_DATA_ERROR_MESSAGE = "Failed to delete data from DB";
     private static final String ADDING_DATA_ERROR_MESSAGE = "Failed to add data to DB";
 
-    ConnectionString connectionString;
-    CodecRegistry pojoCodecRegistry;
-    CodecRegistry codecRegistry;
-    MongoClientSettings clientSettings;
-    MongoCollection<Patient> patients;
-    MongoDatabase hospitalDB;
+    static {
+        try (FileInputStream ins = new FileInputStream("./src/main/java/log/log.config")) {
+            LogManager.getLogManager().readConfiguration(ins);
+            LOGGER = Logger.getLogger(WorkWithMongo.class.getName());
+        } catch (Exception ignore) {
+            ignore.printStackTrace();
+        }
+    }
+
+    private ConnectionString connectionString;
+    private CodecRegistry pojoCodecRegistry;
+    private CodecRegistry codecRegistry;
+    private MongoClientSettings clientSettings;
+    private MongoCollection<Patient> patients;
+    private MongoDatabase hospitalDB;
 
     public WorkWithMongo() {
         Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
@@ -55,7 +69,8 @@ public class WorkWithMongo implements IWorkWithDB {
             patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
             patients.insertOne(patient);
         } catch (Exception e) {
-            System.err.println(ADDING_DATA_ERROR_MESSAGE);
+            //throw new Exception(ADDING_DATA_ERROR_MESSAGE);
+            LOGGER.log(Level.WARNING, ADDING_DATA_ERROR_MESSAGE, e);
         }
     }
 
@@ -66,7 +81,7 @@ public class WorkWithMongo implements IWorkWithDB {
             Document patientWithID = new Document(FieldsDB.ID, patient.getId());
             patients.deleteOne(patientWithID);
         } catch (Exception e) {
-            System.err.println(DELETING_DATA_ERROR_MESSAGE);
+            LOGGER.log(Level.WARNING, DELETING_DATA_ERROR_MESSAGE, e);
         }
     }
 
@@ -78,7 +93,7 @@ public class WorkWithMongo implements IWorkWithDB {
             patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
             patients.find().forEach((Consumer<Patient>) patientsList::add);
         } catch (Exception e) {
-            System.err.println(GETTING_DATA_ERROR_MESSAGE);
+            LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
         return patientsList;
     }
@@ -91,7 +106,7 @@ public class WorkWithMongo implements IWorkWithDB {
             patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
             patients.find(eq(key, value)).forEach((Consumer<Patient>) patientsList::add);
         } catch (Exception e) {
-            System.err.println(GETTING_DATA_ERROR_MESSAGE);
+            LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
         return patientsList;
     }
@@ -107,7 +122,7 @@ public class WorkWithMongo implements IWorkWithDB {
             patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
             patients.find(document).forEach((Consumer<Patient>) patientsList::add);
         } catch (Exception e) {
-            System.err.println(GETTING_DATA_ERROR_MESSAGE);
+            LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
         return patientsList;
     }
@@ -122,7 +137,7 @@ public class WorkWithMongo implements IWorkWithDB {
             amountOfPatient = patientsList.size();
             patients.deleteMany(document);
         } catch (Exception e) {
-            System.err.println(DELETING_DATA_ERROR_MESSAGE);
+            LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
         return amountOfPatient;
     }

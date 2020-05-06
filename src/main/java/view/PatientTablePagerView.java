@@ -10,7 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import model.Patient;
+import model.entity.Patient;
 import presenter.TablePagerViewPresenter;
 
 //уродский класс перепиши влад молю

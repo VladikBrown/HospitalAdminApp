@@ -1,9 +1,10 @@
-package model;
+package model.entity;
 
 import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class Patient {
 
@@ -28,9 +29,6 @@ public class Patient {
         this.surname = "";
         this.firstName = "";
         this.secondName = "";
-        this.address = null;
-        this.birthdate = null;
-        this.dateOfVisit = null;
         this.docName = "";
         this.conclusion = "";
     }
@@ -107,13 +105,42 @@ public class Patient {
         this.conclusion = conclusion;
     }
 
-    public Date getBirthdate() { return birthdate; }
+    public Date getBirthdate() {
+        return birthdate;
+    }
 
-    public void setBirthdate(Date birthdate) { this.birthdate = birthdate; }
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
 
-    public Date getDateOfVisit() { return dateOfVisit; }
+    public Date getDateOfVisit() {
+        return dateOfVisit;
+    }
 
-    public void setDateOfVisit(Date dateOfVisit) { this.dateOfVisit = dateOfVisit; }
+    public void setDateOfVisit(Date dateOfVisit) {
+        this.dateOfVisit = dateOfVisit;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id) &&
+                Objects.equals(surname, patient.surname) &&
+                Objects.equals(firstName, patient.firstName) &&
+                Objects.equals(secondName, patient.secondName) &&
+                Objects.equals(address, patient.address) &&
+                Objects.equals(birthdate, patient.birthdate) &&
+                Objects.equals(dateOfVisit, patient.dateOfVisit) &&
+                Objects.equals(docName, patient.docName) &&
+                Objects.equals(conclusion, patient.conclusion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, surname, firstName, secondName, address, birthdate, dateOfVisit, docName, conclusion);
+    }
 
     @Override
     public String toString() {

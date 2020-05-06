@@ -6,7 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import model.Address;
+import model.entity.Address;
 
 import java.util.Optional;
 
@@ -14,10 +14,10 @@ class AddressPicker extends Stage implements EditingDialog {
     private Address address;
     private AnchorPane anchorPane = new AnchorPane();
     private VBox flowPane = new VBox();
-    ColumnConstraints
+    private ColumnConstraints
             columnConstraints = new ColumnConstraints(0, 0, Double.MAX_VALUE),
             columnConstraints1 = new ColumnConstraints(0, 0, Double.MAX_VALUE);
-    RowConstraints
+    private RowConstraints
             rowConstraints = new RowConstraints(0, 0, Double.MAX_VALUE),
             rowConstraints1 = new RowConstraints(0, 0, Double.MAX_VALUE),
             rowConstraints2 = new RowConstraints(0, 0, Double.MAX_VALUE),

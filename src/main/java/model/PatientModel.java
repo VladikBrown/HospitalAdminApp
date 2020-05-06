@@ -2,25 +2,29 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import model.entity.Patient;
+import mongoDAO.PatientDAO;
+import mongoDAO.impl.PatientDAOImpl;
 import org.bson.Document;
 import presenter.Presenter;
 
+//играет роль Service
 //TODO singleton
 //TODO сделать модификацию бд более безопасной
 public class PatientModel implements IModel<Patient> {
-    Presenter presenter;
-    ObservableList<Patient> patients;
-    WorkWithMongo workWithMongo;
+    private Presenter presenter;
+    private ObservableList<Patient> patients;
+    private PatientDAO patientDAO;
 
     public PatientModel() {
         patients = FXCollections.observableArrayList();
-        workWithMongo = new WorkWithMongo();
+        patientDAO = new PatientDAOImpl();
     }
 
     public PatientModel(Presenter presenter) {
         this.presenter = presenter;
         patients = FXCollections.observableArrayList();
-        workWithMongo = new WorkWithMongo();
+        patientDAO = new PatientDAOImpl();
     }
 
     public void setPresenter(Presenter presenter){
@@ -28,26 +32,26 @@ public class PatientModel implements IModel<Patient> {
     }
 
     public void add(Patient patient) {
+        patientDAO.add(patient);
         patients.add(patient);
-        workWithMongo.add(patient);
         presenter.onUpdate();
     }
 
     public void delete(Patient patient) {
         patients.removeAll(patient);
-        workWithMongo.delete(patient);
+        patientDAO.delete(patient);
     }
 
 
     public int deleteAll(Document document) {
-        int deletedPatients = workWithMongo.deleteAll(document);
+        int deletedPatients = patientDAO.deleteAll(document);
         upload();
         return deletedPatients;
     }
 
     @Override
     public void upload() {
-        patients = workWithMongo.getAll();
+        patients = patientDAO.getAll();
     }
 
     public ObservableList<Patient> getAll() {
@@ -62,7 +66,6 @@ public class PatientModel implements IModel<Patient> {
     }
 
     public void find(Document document) {
-        ObservableList<Patient> patients = workWithMongo.find(document);
-        presenter.showTable(patients);
+        presenter.showTable(patientDAO.find(document));
     }
 }

@@ -1,19 +1,17 @@
 package presenter;
 
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import model.IModel;
-import model.Patient;
 import model.PatientModel;
+import model.entity.Patient;
 import org.bson.Document;
 import view.*;
+import view.alerts.PatientAlerts;
 import view.dialogs.AddPatientDialog;
 import view.dialogs.FindPatientDialog;
 
 import java.util.Optional;
 
-
-//подумать как с интерфейсами забацать
 public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPresenter<Patient>, ToolBarViewPresenter {
     private Patient selectedPatient;
     private TablePagerView<Patient> patientTablePagerView;
@@ -45,10 +43,7 @@ public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPres
         if (patients.size() > 0) {
             patientTablePagerView.createPager(patients);
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("No results on such criteria!");
-            alert.setContentText("Please, try to enter correct info");
-            alert.showAndWait();
+            PatientAlerts.displayError();
         }
     }
 
@@ -76,10 +71,7 @@ public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPres
             ((PatientTableView) currentPage).getItems().removeAll(selectedPatient);
             selectedPatient = null;
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setHeaderText("You've not selected any patient!");
-            alert.setContentText("Please, select patient and try again");
-            alert.showAndWait();
+            PatientAlerts.notSelectedError();
         }
     }
 
@@ -115,10 +107,7 @@ public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPres
         Optional<Document> documentOptional = patientDialog.getResult();
         if (documentOptional.isPresent()) {
             int amountOfPatients = model.deleteAll(documentOptional.get());
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setHeaderText("Deleting");
-            alert.setContentText("You've deleted " + amountOfPatients + " patients");
-            alert.showAndWait();
+            PatientAlerts.deletingInfo(amountOfPatients);
         }
         onUpdate();
     }

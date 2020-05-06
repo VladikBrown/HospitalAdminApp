@@ -1,6 +1,8 @@
-package model;
+package model.entity;
 
 import org.bson.codecs.pojo.annotations.BsonProperty;
+
+import java.util.Objects;
 
 public class Address {
     private String street;
@@ -56,6 +58,22 @@ public class Address {
 
     public void setApartmentsNumber(Integer apartmentsNumber) {
         this.apartmentsNumber = apartmentsNumber;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(street, address.street) &&
+                Objects.equals(homeNumber, address.homeNumber) &&
+                Objects.equals(buildingNumber, address.buildingNumber) &&
+                Objects.equals(apartmentsNumber, address.apartmentsNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(street, homeNumber, buildingNumber, apartmentsNumber);
     }
 
     @Override

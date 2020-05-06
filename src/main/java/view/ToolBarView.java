@@ -1,16 +1,19 @@
 package view;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import presenter.ToolBarViewPresenter;
 
 public class ToolBarView extends ToolBar implements IToolBarView {
-    ToolBarViewPresenter presenter;
-    Button updateButton;
-    Button addRecordButton;
-    Button findButton;
-    Button deleteButton;
-    Button findAndDelete;
+    private ToolBarViewPresenter presenter;
+    private Button updateButton;
+    private Button addRecordButton;
+    private Button findButton;
+    private Button deleteButton;
+    private Button findAndDelete;
 
     {
         updateButton = new Button("Update");
@@ -47,6 +50,12 @@ public class ToolBarView extends ToolBar implements IToolBarView {
         onFindButton();
         onFindAndDeleteButton();
         onUpdateButton();
+    }
+
+    public ObservableList<Node> getTools() {
+        ObservableList<Node> tools = FXCollections.observableArrayList(addRecordButton, deleteButton, updateButton
+                , findAndDelete, findButton);
+        return FXCollections.unmodifiableObservableList(tools);
     }
 
     @Override

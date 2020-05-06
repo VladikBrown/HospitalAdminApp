@@ -8,7 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import model.Address;
+import model.entity.Address;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -26,15 +26,15 @@ public abstract class PatientEditingDialog<T> implements EditingDialog<T> {
     protected TextField conclusionField = new TextField();
     protected DatePicker birthdatePicker = new DatePicker();
     protected DatePicker dateOfVisitPicker = new DatePicker();
-    AnchorPane anchorPane = new AnchorPane();
-    GridPane gridPane = new GridPane();
-    Button okButton = new Button("OK");
-    Button cancelButton = new Button("Cancel");
-    Button buttonAddress = new Button("Set Address");
-    ColumnConstraints
+    protected AnchorPane anchorPane = new AnchorPane();
+    protected GridPane gridPane = new GridPane();
+    protected Button okButton = new Button("OK");
+    protected Button cancelButton = new Button("Cancel");
+    protected Button buttonAddress = new Button("Set Address");
+    private ColumnConstraints
             columnConstraints = new ColumnConstraints(0, 0, Double.MAX_VALUE),
             columnConstraints1 = new ColumnConstraints(0, 0, Double.MAX_VALUE);
-    RowConstraints
+    private RowConstraints
             rowConstraints = new RowConstraints(0, 0, Double.MAX_VALUE),
             rowConstraints1 = new RowConstraints(0, 0, Double.MAX_VALUE),
             rowConstraints2 = new RowConstraints(0, 0, Double.MAX_VALUE),
