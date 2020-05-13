@@ -11,4 +11,6 @@ public interface TablePagerViewPresenter<T> extends IPresenter {
     void setOnItemSelected(T selectedItem);
 
     void setCurrentPage(PatientTableView patientTableView);
+
+    boolean updateCache(int offset, int limit);
 }

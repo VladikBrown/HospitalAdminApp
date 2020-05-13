@@ -7,10 +7,18 @@ import mongoDAO.WorkWithMongo;
 import org.bson.Document;
 
 public class PatientDAOImpl implements PatientDAO {
-    private WorkWithMongo workWithMongo;
+    private final WorkWithMongo workWithMongo;
 
-    {
+    public PatientDAOImpl() {
         workWithMongo = new WorkWithMongo();
+    }
+
+    public PatientDAOImpl(String path) {
+        String[] dividedPath = path.split("/");
+        for (var s : dividedPath) {
+            System.out.println(s);
+        }
+        workWithMongo = new WorkWithMongo(dividedPath[2], dividedPath[3]);
     }
 
     @Override

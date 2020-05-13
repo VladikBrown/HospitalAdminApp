@@ -8,22 +8,22 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import presenter.Presenter;
+import presenter.PatientPresenter;
 
 public class WindowView {
-    private Presenter presenter;
+    private final PatientPresenter patientPresenter;
     //components
-    private BorderPane view;
-    private AnchorPane splitAnchor;
-    private SplitPane centerPane;
-    private AnchorPane rightAnchor;
-    private AnchorPane leftAnchor;
+    private final BorderPane view;
+    private final AnchorPane splitAnchor;
+    private final SplitPane centerPane;
+    private final AnchorPane rightAnchor;
+    private final AnchorPane leftAnchor;
     //topBorder
-    private ToolBarView topBar;
+    private final ToolBarView topBar;
     //leftBorder - list of patients
-    private PatientTablePagerView tableView;
+    private final PatientTablePagerView tableView;
     //rightBorder - info about patients
-    private PatientInfoView infoPane;
+    private final PatientInfoView infoPane;
 
     {
         view = new BorderPane();
@@ -34,10 +34,10 @@ public class WindowView {
         topBar = new ToolBarView();
         infoPane = new PatientInfoView();
         tableView = new PatientTablePagerView();
-        presenter = new Presenter(tableView, infoPane, topBar);
-        tableView.setTablePagerViewPresenter(presenter);
-        topBar.setToolBarViewPresenter(presenter);
-        infoPane.setInfoViewPresenter(presenter);
+        patientPresenter = new PatientPresenter(tableView, infoPane, topBar);
+        tableView.setTablePagerViewPresenter(patientPresenter);
+        topBar.setToolBarViewPresenter(patientPresenter);
+        infoPane.setInfoViewPresenter(patientPresenter);
     }
 
 
@@ -54,7 +54,7 @@ public class WindowView {
         AnchorPane.setLeftAnchor(centerPane, 0.0);
         AnchorPane.setBottomAnchor(centerPane, 0.0);
         AnchorPane.setRightAnchor(centerPane, 0.0);
-        splitAnchor.getChildren().add(centerPane);
+        splitAnchor.getChildren().addAll(centerPane);
         centerPane.getItems().add(0, leftAnchor);
         centerPane.getItems().add(1, rightAnchor);
     }

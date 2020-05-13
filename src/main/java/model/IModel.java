@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import org.bson.Document;
 
 public interface IModel<T> {
+
     void upload();
 
     void find(Document document);
@@ -15,4 +16,6 @@ public interface IModel<T> {
     int deleteAll(Document document);
 
     ObservableList<T> getAll();
+
+    void updateCache(int offset, int limit);
 }

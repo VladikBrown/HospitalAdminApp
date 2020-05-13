@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Patient {
 
+    //alt+insert
     private ObjectId id;
     private String surname;
     @BsonProperty(value = "first_name")

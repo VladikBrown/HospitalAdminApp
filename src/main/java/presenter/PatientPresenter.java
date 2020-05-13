@@ -12,15 +12,15 @@ import view.dialogs.FindPatientDialog;
 
 import java.util.Optional;
 
-public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPresenter<Patient>, ToolBarViewPresenter {
+public class PatientPresenter implements InfoViewPresenter<Patient>, TablePagerViewPresenter<Patient>, ToolBarViewPresenter {
     private Patient selectedPatient;
-    private TablePagerView<Patient> patientTablePagerView;
+    private final TablePagerView<Patient> patientTablePagerView;
     private InfoView<Patient> patientInfoView;
-    private IToolBarView toolBarView;
+    private final IToolBarView toolBarView;
     private ITableView currentPage;
     private IModel<Patient> model;
 
-    public Presenter(PatientTablePagerView tpv, PatientInfoView piv, ToolBarView tbv) {
+    public PatientPresenter(PatientTablePagerView tpv, PatientInfoView piv, ToolBarView tbv) {
         patientTablePagerView = tpv;
         patientInfoView = piv;
         toolBarView = tbv;
@@ -98,6 +98,11 @@ public class Presenter implements InfoViewPresenter<Patient>, TablePagerViewPres
     @Override
     public void setCurrentPage(PatientTableView patientTableView) {
         this.currentPage = patientTableView;
+    }
+
+    @Override
+    public boolean updateCache(int offset, int limit) {
+        return false;
     }
 
     @Override

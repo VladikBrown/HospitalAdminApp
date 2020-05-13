@@ -25,8 +25,8 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 public class WorkWithMongo {
     static Logger LOGGER;
-    private static final String DB_NAME = "hospitalDB";
-    private static final String COLLECTION_NAME = "patients";
+    private static final String DEFAULT_DB_NAME = "hospitalDB";
+    private static final String DEFAULT_COLLECTION_NAME = "patients";
     private static final String GETTING_DATA_ERROR_MESSAGE = "Failed to get data from DB";
     private static final String DELETING_DATA_ERROR_MESSAGE = "Failed to delete data from DB";
     private static final String ADDING_DATA_ERROR_MESSAGE = "Failed to add data to DB";
@@ -40,14 +40,21 @@ public class WorkWithMongo {
         }
     }
 
-    private ConnectionString connectionString;
-    private CodecRegistry pojoCodecRegistry;
-    private CodecRegistry codecRegistry;
-    private MongoClientSettings clientSettings;
-    private MongoCollection<Patient> patients;
-    private MongoDatabase hospitalDB;
+    private final ConnectionString connectionString;
+    private final CodecRegistry pojoCodecRegistry;
+    private final CodecRegistry codecRegistry;
+    private final MongoClientSettings clientSettings;
+    private final String currentDatabaseName;
+    private final String currentCollectionName;
+    private MongoCollection<Patient> currentCollection;
+    private MongoDatabase currentDataBase;
 
+    /**
+     * connects to localhost and default path (see consts)
+     */
     public WorkWithMongo() {
+        currentDatabaseName = DEFAULT_DB_NAME;
+        currentCollectionName = DEFAULT_COLLECTION_NAME;
         Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
         connectionString = new ConnectionString("mongodb://localhost");
         pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
@@ -58,28 +65,51 @@ public class WorkWithMongo {
                 .build();
 
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            LOGGER.log(Level.INFO, "Default connection established");
+        }
+    }
+
+    /**
+     * connects to selected database and collection
+     */
+    public WorkWithMongo(String dbname, String collectionName) {
+        currentDatabaseName = dbname;
+        currentCollectionName = collectionName;
+        Logger.getLogger("org.mongodb.driver").setLevel(Level.WARNING);
+        connectionString = new ConnectionString("mongodb://localhost");
+        pojoCodecRegistry = fromProviders(PojoCodecProvider.builder().automatic(true).build());
+        codecRegistry = fromRegistries(MongoClientSettings.getDefaultCodecRegistry(), pojoCodecRegistry);
+        clientSettings = MongoClientSettings.builder()
+                .applyConnectionString(connectionString)
+                .codecRegistry(codecRegistry)
+                .build();
+
+        try (var mongoClient = MongoClients.create(clientSettings)) {
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            LOGGER.log(Level.INFO, "Connection established");
         }
     }
 
     public void add(Patient patient) {
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
-            patients.insertOne(patient);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            currentCollection.insertOne(patient);
+            //TODO классы исключений в пакете Exceptions!!!
         } catch (Exception e) {
-            //throw new Exception(ADDING_DATA_ERROR_MESSAGE);
             LOGGER.log(Level.WARNING, ADDING_DATA_ERROR_MESSAGE, e);
         }
     }
 
     public void delete(Patient patient) {
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
             Document patientWithID = new Document(FieldsDB.ID, patient.getId());
-            patients.deleteOne(patientWithID);
+            currentCollection.deleteOne(patientWithID);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, DELETING_DATA_ERROR_MESSAGE, e);
         }
@@ -89,9 +119,9 @@ public class WorkWithMongo {
         ObservableList<Patient> patientsList = FXCollections.observableArrayList();
 
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
-            patients.find().forEach((Consumer<Patient>) patientsList::add);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            currentCollection.find().forEach((Consumer<Patient>) patientsList::add);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
@@ -102,9 +132,9 @@ public class WorkWithMongo {
         ObservableList<Patient> patientsList = FXCollections.observableArrayList();
 
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
-            patients.find(eq(key, value)).forEach((Consumer<Patient>) patientsList::add);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            currentCollection.find(eq(key, value)).forEach((Consumer<Patient>) patientsList::add);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
@@ -118,9 +148,9 @@ public class WorkWithMongo {
         }
 
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
-            patients.find(document).forEach((Consumer<Patient>) patientsList::add);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            currentCollection.find(document).forEach((Consumer<Patient>) patientsList::add);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
@@ -131,11 +161,11 @@ public class WorkWithMongo {
         ObservableList<Patient> patientsList = FXCollections.observableArrayList();
         int amountOfPatient = 0;
         try (var mongoClient = MongoClients.create(clientSettings)) {
-            hospitalDB = mongoClient.getDatabase(DB_NAME);
-            patients = hospitalDB.getCollection(COLLECTION_NAME, Patient.class);
-            patients.find(document).forEach((Consumer<Patient>) patientsList::add);
+            currentDataBase = mongoClient.getDatabase(currentDatabaseName);
+            currentCollection = currentDataBase.getCollection(currentCollectionName, Patient.class);
+            currentCollection.find(document).forEach((Consumer<Patient>) patientsList::add);
             amountOfPatient = patientsList.size();
-            patients.deleteMany(document);
+            currentCollection.deleteMany(document);
         } catch (Exception e) {
             LOGGER.log(Level.WARNING, GETTING_DATA_ERROR_MESSAGE, e);
         }
