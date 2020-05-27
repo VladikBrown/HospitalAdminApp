@@ -117,11 +117,25 @@
 }
 
 .menu-bar {
-    -fx-background-color: derive(#1d1d1d,20%);
+    -fx-pref-height: 50;
+    -fx-background-color: derive(#1d1d1d, 20%);
+}
+
+.menu-bar:focused {
+    -fx-background-color: #2d2d2d;
 }
 
 .context-menu {
-    -fx-background-color: derive(#1d1d1d,50%);
+    -fx-background-color: #3a3a3a;
+    -fx-pref-width: 200;
+}
+
+.menu-item {
+    -fx-pref-height: 50;
+}
+
+.menu-item:focused {
+    -fx-background-color: #2d2d2d;
 }
 
 .menu-bar .label {
@@ -140,11 +154,22 @@
     -fx-font-family: "Segoe UI Semibold";
 }
 
-/*
- * Push Button в стиле Metro
- * Автор: Pedro Duque Vieira
- * http://pixelduke.wordpress.com/2012/10/23/jmetro-windows-8-controls-on-java/
- */
+.menu:hover, .menu:showing {
+    -fx-background-color: #3a3a3a;
+}
+
+.menu:focused {
+    -fx-background-color: #2d2d2d;
+}
+
+.menu-bar:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.menu-item:hover {
+    -fx-background-color: #1d1d1d;
+}
+
 .button {
     -fx-padding: 5 22 5 22;
     -fx-border-color: #e2e2e2;

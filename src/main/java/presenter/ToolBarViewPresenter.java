@@ -11,4 +11,6 @@ public interface ToolBarViewPresenter extends IPresenter {
     void onFind();
 
     void onFindAndDelete();
+
+    void onChangeCollection();
 }

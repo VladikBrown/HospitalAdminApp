@@ -5,9 +5,9 @@ import org.bson.Document;
 
 public interface IModel<T> {
 
-    void upload();
+    void dropAndUpload();
 
-    void find(Document document);
+    void get(Document document, int offset, int limit);
 
     void add(T item);
 
@@ -17,5 +17,4 @@ public interface IModel<T> {
 
     ObservableList<T> getAll();
 
-    void updateCache(int offset, int limit);
 }

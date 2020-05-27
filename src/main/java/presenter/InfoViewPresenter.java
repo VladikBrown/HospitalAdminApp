@@ -1,6 +1,6 @@
 package presenter;
 
-import view.InfoView;
+import view.components.InfoView;
 
 public interface InfoViewPresenter<T> extends IPresenter {
     InfoView<T> getInfoView();

@@ -45,8 +45,6 @@ public class AddPatientDialog extends PatientEditingDialog<Patient> {
 
     public boolean isInputValid() {
         String errorMessage = "";
-        //TODO: сделать свитч вместо ифов???
-
         if (!isStringInputValid(surnameField.getText())) {
             errorMessage += "No valid surname!\n";
         }

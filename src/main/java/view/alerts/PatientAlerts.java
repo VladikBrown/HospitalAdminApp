@@ -3,7 +3,7 @@ package view.alerts;
 import javafx.scene.control.Alert;
 
 public abstract class PatientAlerts {
-    public static void displayError() {
+    public static void displayingError() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Failed to display!");
         alert.setContentText("Please, try to enter correct info");

@@ -5,6 +5,8 @@ import model.entity.Patient;
 import mongoDAO.PatientDAO;
 import mongoDAO.WorkWithMongo;
 import org.bson.Document;
+import server.exceptions.CollectionNotFoundException;
+import server.exceptions.NoSuchDataBaseException;
 
 public class PatientDAOImpl implements PatientDAO {
     private final WorkWithMongo workWithMongo;
@@ -13,7 +15,7 @@ public class PatientDAOImpl implements PatientDAO {
         workWithMongo = new WorkWithMongo();
     }
 
-    public PatientDAOImpl(String path) {
+    public PatientDAOImpl(String path) throws CollectionNotFoundException, NoSuchDataBaseException {
         String[] dividedPath = path.split("/");
         for (var s : dividedPath) {
             System.out.println(s);
@@ -22,8 +24,8 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public ObservableList<Patient> find(Document document) {
-        return workWithMongo.find(document);
+    public ObservableList<Patient> find(Document document, int offset, int limit) {
+        return workWithMongo.find(document, offset, limit);
     }
 
     @Override
@@ -42,7 +44,12 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public ObservableList<Patient> getAll() {
-        return workWithMongo.getAll();
+    public ObservableList<Patient> getAll(int offset, int limit) {
+        return workWithMongo.getAll(offset, limit);
+    }
+
+    @Override
+    public long getNumberRecords(Document document) {
+        return workWithMongo.getNumberOfRecords(document);
     }
 }

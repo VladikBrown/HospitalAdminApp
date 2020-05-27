@@ -17,7 +17,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.3</version>
                 <configuration>
-                    <mainClass>windowView.MainWindow</mainClass>
+                    <mainClass>mainWindowView.MainWindow</mainClass>
                 </configuration>
             </plugin>
             <plugin>
